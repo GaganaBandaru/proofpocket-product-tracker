@@ -1,0 +1,21 @@
+.repair-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  background: var(--clr-surface-2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+}
+
+.repair-form__work {
+  grid-column: span 2;
+}
+
+.repair-form__submit {
+  align-self: flex-start;
+}
+
+@media (max-width: 640px) {
+  .repair-form__work { grid-column: span 1; }
+}

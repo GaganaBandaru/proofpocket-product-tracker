@@ -1,0 +1,137 @@
+/* Product List */
+.product-list__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  align-items: center;
+}
+
+.product-list__search {
+  flex: 1;
+  min-width: 200px;
+  max-width: 340px;
+}
+
+.product-list__cats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.product-list__count {
+  font-size: 13px;
+  color: var(--clr-text-muted);
+  margin-bottom: var(--space-5);
+}
+
+.product-list__count strong {
+  color: var(--clr-text);
+}
+
+@media (max-width: 640px) {
+  .product-list__search {
+    max-width: 100%;
+  }
+}
+
+/* Warranty and service reminders */
+.reminder-panel {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+}
+
+.reminder-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.reminder-panel__header h2 {
+  font-size: 1.2rem;
+}
+
+.reminder-list {
+  display: grid;
+  gap: 10px;
+  max-height: 252px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-md);
+  color: var(--clr-text);
+  transition: background var(--transition);
+}
+
+.reminder-item:hover {
+  background: var(--clr-surface-2);
+  color: var(--clr-text);
+}
+
+.reminder-item--warning {
+  border-left: 4px solid var(--clr-warning);
+}
+
+.reminder-item--danger {
+  border-left: 4px solid var(--clr-danger);
+}
+
+.reminder-item__icon {
+  font-size: 20px;
+}
+
+.reminder-item__content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.reminder-item__content strong {
+  color: var(--clr-text);
+}
+
+.reminder-item__content span {
+  color: var(--clr-text-muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 480px) {
+  .reminder-panel {
+    padding: 14px;
+  }
+
+  .reminder-item {
+    padding: 10px;
+  }
+}
+
+/* Product pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+.pagination button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

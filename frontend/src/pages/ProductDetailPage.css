@@ -1,0 +1,221 @@
+/* ── Detail Header ── */
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+}
+
+.detail-header__name {
+  margin-bottom: var(--space-3);
+}
+
+.detail-header__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.detail-header__actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+/* ── Two-column grid ── */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .detail-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Details card ── */
+.detail-card {
+  padding: var(--space-6);
+}
+
+.detail-card__title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--clr-text-muted);
+  margin-bottom: var(--space-5);
+}
+
+.detail-dl {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.detail-dl__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--clr-border);
+  gap: var(--space-4);
+}
+
+.detail-dl__row:last-child { border-bottom: none; }
+
+.detail-dl dt {
+  font-size: 13px;
+  color: var(--clr-text-muted);
+  font-weight: 400;
+}
+
+.detail-dl dd {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--clr-text);
+  text-align: right;
+}
+
+.detail-notes h3 {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--clr-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.detail-notes p {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ── Summary stats ── */
+.detail-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 160px;
+}
+
+@media (max-width: 768px) {
+  .detail-summary {
+    flex-direction: row;
+    flex-wrap: wrap;
+    min-width: unset;
+  }
+  .summary-stat { flex: 1; min-width: 120px; }
+}
+
+.summary-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5) var(--space-4);
+  text-align: center;
+  gap: var(--space-1);
+}
+
+.summary-stat__icon { font-size: 1.5rem; line-height: 1; }
+
+.summary-stat__value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--clr-text);
+}
+
+.summary-stat__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--clr-text-faint);
+}
+
+/* ── Repairs section ── */
+.repairs-section {
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--clr-border);
+}
+
+.repairs-section__title {
+  margin-bottom: var(--space-6);
+}
+
+.repairs-section__form {
+  margin-bottom: var(--space-8);
+}
+
+.repairs-section__form h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  margin-bottom: var(--space-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.repairs-empty {
+  color: var(--clr-text-muted);
+  font-size: 14px;
+  padding: var(--space-8) 0;
+  text-align: center;
+}
+
+/* ── Repair list ── */
+.repair-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+}
+
+.repair-item {
+  padding: var(--space-4) var(--space-5);
+}
+
+.repair-item__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.repair-item__issue {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--clr-text);
+  margin: 0;
+}
+
+.repair-item__date {
+  font-size: 12px;
+  color: var(--clr-text-muted);
+  margin: 3px 0 0;
+}
+
+.repair-item__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.repair-item__work {
+  font-size: 13px;
+  color: var(--clr-text-muted);
+  margin: 0;
+}
+
+.repair-item__work strong {
+  color: var(--clr-text-faint);
+}
+
+/* Breadcrumb reused */
+.breadcrumb { margin-bottom: var(--space-6); }

@@ -1,0 +1,51 @@
+/* Product Form */
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.product-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.product-form__section-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--clr-text-muted);
+}
+
+.form-input--error {
+  border-color: var(--clr-danger) !important;
+}
+
+.form-error {
+  font-size: 12px;
+  color: var(--clr-danger);
+  margin: 0;
+}
+
+.required {
+  color: var(--clr-danger);
+}
+
+.product-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-4);
+}
+
+/* Mini spinner inside button */
+.btn-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}

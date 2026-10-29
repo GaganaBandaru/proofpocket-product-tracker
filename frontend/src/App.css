@@ -1,0 +1,7 @@
+/* App.css — page-level layout extras */
+/* Most styles are in index.css. This file is intentionally minimal. */
+
+/* Ensure the Navbar doesn't overlap content */
+main.page {
+  flex: 1;
+}
