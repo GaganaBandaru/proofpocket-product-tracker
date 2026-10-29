@@ -1,8 +1,9 @@
-import productRoutes from "./routes/productRoutes.js";
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import productRoutes from "./routes/productRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -11,6 +12,9 @@ const PORT = process.env.PORT || 5001;
 
 app.use(cors());
 app.use(express.json());
+
+// Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 
 // Test route
@@ -33,6 +37,10 @@ async function startServer() {
   try {
     if (!process.env.MONGODB_URI) {
       throw new Error("MONGODB_URI is missing from the .env file");
+    }
+
+    if (!process.env.JWT_SECRET) {
+      throw new Error("JWT_SECRET is missing from the .env file");
     }
 
     await mongoose.connect(process.env.MONGODB_URI);

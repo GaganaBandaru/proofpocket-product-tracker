@@ -17,9 +17,11 @@ node_modules/
 dist/
 build/
 
-# Logs
+# Logs & Backups
 *.log
 npm-debug.log*
+backups/
+**/backups/
 
 # OS files
 .DS_Store
@@ -29,3 +31,5 @@ Thumbs.db
 .vscode/
 .idea/
 *.sw?
+
+backend/uploads/

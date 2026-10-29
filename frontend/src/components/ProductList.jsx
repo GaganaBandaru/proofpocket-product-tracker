@@ -1,9 +1,90 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { getProducts, deleteProduct } from '../api/products'
 import ProductCard from './ProductCard'
+import DashboardStats from './DashboardStats'
 import Toast from './Toast'
 import './ProductList.css'
+
+/**
+ * Pure sorting helper for product items.
+ * Handles missing/invalid dates and prices safely.
+ */
+function sortProducts(items, sortBy) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  return [...items].sort((a, b) => {
+    switch (sortBy) {
+      case 'oldest': {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        return timeA - timeB
+      }
+      case 'price-asc': {
+        const priceA = typeof a.purchasePrice === 'number' && !Number.isNaN(a.purchasePrice) ? a.purchasePrice : 0
+        const priceB = typeof b.purchasePrice === 'number' && !Number.isNaN(b.purchasePrice) ? b.purchasePrice : 0
+        if (priceA !== priceB) return priceA - priceB
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        return timeB - timeA
+      }
+      case 'price-desc': {
+        const priceA = typeof a.purchasePrice === 'number' && !Number.isNaN(a.purchasePrice) ? a.purchasePrice : 0
+        const priceB = typeof b.purchasePrice === 'number' && !Number.isNaN(b.purchasePrice) ? b.purchasePrice : 0
+        if (priceA !== priceB) return priceB - priceA
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        return timeB - timeA
+      }
+      case 'warranty-soonest': {
+        const getWarrantySortInfo = (p) => {
+          if (!p.warrantyExpiry) return { rank: 2, time: Infinity }
+          const d = new Date(p.warrantyExpiry)
+          if (Number.isNaN(d.getTime())) return { rank: 2, time: Infinity }
+
+          const target = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+          const diffDays = Math.round((target.getTime() - today.getTime()) / 86400000)
+
+          if (diffDays >= 0) {
+            // Rank 0: Valid upcoming warranty expiry (ordered earliest first)
+            return { rank: 0, time: target.getTime() }
+          }
+          // Rank 1: Expired warranty
+          return { rank: 1, time: target.getTime() }
+        }
+
+        const infoA = getWarrantySortInfo(a)
+        const infoB = getWarrantySortInfo(b)
+
+        if (infoA.rank !== infoB.rank) {
+          return infoA.rank - infoB.rank
+        }
+
+        if (infoA.rank === 0) {
+          // Upcoming: soonest first
+          return infoA.time - infoB.time
+        }
+
+        if (infoA.rank === 1) {
+          // Expired: most recently expired first
+          return infoB.time - infoA.time
+        }
+
+        // Rank 2: Without valid warranty date -> fallback to newest first
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        return timeB - timeA
+      }
+      case 'newest':
+      default: {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0
+        return timeB - timeA
+      }
+    }
+  })
+}
 
 export default function ProductList() {
   const [products, setProducts] = useState([])
@@ -11,10 +92,10 @@ export default function ProductList() {
   const [error, setError] = useState(null)
   const [search, setSearch] = useState('')
   const [filterCat, setFilterCat] = useState('All')
+  const [sortBy, setSortBy] = useState('newest')
   const [toast, setToast] = useState(null)
   const [currentPage, setCurrentPage] = useState(1)
   const productsPerPage = 6
-
 
   // Fetch all products
   const fetchProducts = useCallback(async () => {
@@ -43,7 +124,6 @@ export default function ProductList() {
     }
   }
 
-
   // Warranty and service reminders
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -60,7 +140,6 @@ export default function ProductList() {
 
   const reminders = products.flatMap(product => {
     const items = []
-
 
     const warrantyDays = getDaysUntil(product.warrantyExpiry)
 
@@ -84,8 +163,6 @@ export default function ProductList() {
       })
     }
 
-
-
     const serviceDays = getDaysUntil(product.nextServiceDate)
 
     if (
@@ -108,7 +185,6 @@ export default function ProductList() {
       })
     }
 
-
     return items
   })
 
@@ -124,19 +200,27 @@ export default function ProductList() {
     return matchSearch && matchCat
   })
 
+  // Sorted list
+  const sorted = useMemo(() => {
+    return sortProducts(filtered, sortBy)
+  }, [filtered, sortBy])
 
-  const totalPages = Math.ceil(filtered.length / productsPerPage)
+  const totalPages = Math.ceil(sorted.length / productsPerPage)
 
   const startIndex = (currentPage - 1) * productsPerPage
-  const paginatedProducts = filtered.slice(
+  const paginatedProducts = sorted.slice(
     startIndex,
     startIndex + productsPerPage
   )
 
-
   // ── Render ────────────────────────────────────────────────
   return (
     <div>
+      {/* Dashboard summary statistics */}
+      {!error && (
+        <DashboardStats products={products} loading={loading} />
+      )}
+
       {/* Warranty and service reminders */}
       {!loading && !error && reminders.length > 0 && (
         <section className="reminder-panel" aria-labelledby="reminder-heading">
@@ -168,7 +252,7 @@ export default function ProductList() {
         </section>
       )}
 
-      {/* Filters */}
+      {/* Filters & Sorting */}
       <div className="product-list__filters">
         <input
           id="product-search"
@@ -182,6 +266,29 @@ export default function ProductList() {
           }}
           aria-label="Search products"
         />
+
+        <div className="product-list__sort-wrap">
+          <label htmlFor="product-sort" className="sr-only">
+            Sort products
+          </label>
+          <select
+            id="product-sort"
+            className="form-select product-list__sort"
+            value={sortBy}
+            onChange={e => {
+              setSortBy(e.target.value)
+              setCurrentPage(1)
+            }}
+            aria-label="Sort products"
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="warranty-soonest">Warranty Expiring Soonest</option>
+          </select>
+        </div>
+
         <div className="product-list__cats" role="group" aria-label="Filter by category">
           {categories.map(cat => (
             <button

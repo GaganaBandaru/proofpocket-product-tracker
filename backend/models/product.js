@@ -25,6 +25,11 @@ const repairSchema = new mongoose.Schema(
 
 const productSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      index: true,
+    },
     name: {
       type: String,
       required: true,
@@ -64,6 +69,7 @@ const productSchema = new mongoose.Schema(
       default: [],
     },
   },
+
   { timestamps: true }
 );
 
